@@ -1,5 +1,7 @@
 # Pipe Indexer by Inscrib3
 
+![Indexing](/preview.png "Preview of Indexer")
+
 Indexing Pipe protocol tokens and related actions like transfers, deployments, mints.
 
 ## Docs
@@ -9,6 +11,7 @@ We are running two different instances one for testnet one for mainnet.
 You can find docs and use our API for free directly from here:
 
 [https://indexer.inspip.com/docs](https://indexer.inspip.com/docs)
+
 [https://indexer-testnet.inspip.com/docs](https://indexer-testnet.inspip.com/docs)
 
 ## Local
