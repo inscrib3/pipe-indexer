@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: "mongo:latest"
+    container_name: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: "${DATABASE_USER}"
+      MONGO_INITDB_ROOT_PASSWORD: "${DATABASE_PASSWORD}"
+      MONGO_INITDB_DATABASE: "${DATABASE}"
+    volumes:
+      - mongodb_data_container:/data/db
+
+  nestjs:
+    container_name: nestjs-backend
+    build: .
+    stop_signal: SIGTERM
+    stop_grace_period: 200s
+    environment:
+      BITCOIN_NODE_URL: "${BITCOIN_NODE_URL}"
+      DATABASE_URL: "${DATABASE_URL}"
+      DATABASE_USER: "${DATABASE_USER}"
+      DATABASE_PASSWORD: "${DATABASE_PASSWORD}"
+    depends_on:
+      mongo:
+        condition: service_started
+    volumes:
+      - nestjs_data_container:/usr/src/app
+    links:
+      - mongo
+
+  nginx:
+    image: jonasal/nginx-certbot:latest
+    container_name: nginx
+    restart: unless-stopped
+    environment:
+      CERTBOT_EMAIL: "${CERTBOT_EMAIL}"
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - nginx_secrets:/etc/letsencrypt
+      - ./nginx:/etc/nginx/user_conf.d
+    depends_on:
+      nestjs:
+        condition: service_started
+    links:
+      - nestjs
+    
+volumes:
+  nestjs_data_container:
+  mongodb_data_container:
+  nginx_secrets:
