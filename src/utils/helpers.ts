@@ -28,6 +28,14 @@ export async function findWithTotalCount(
     query.collectionAddress = { $eq: null };
   } else if (filter === 'art') {
     query.collectionAddress = { $ne: null };
+  } else if (filter === 'fractional') {
+    query.collectionAddress = { $ne: null };
+    query.decimals = { $eq: 0 };
+    query.limit = { $eq: 1 };
+  } else if (filter === '404') {
+    query.collectionAddress = { $ne: null };
+    query.limit = { $gt: 1 };
+    query.maxSupply = { $ne: '1' };
   }
 
   const [results, totalCount] = await Promise.all([
